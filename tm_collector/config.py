@@ -44,7 +44,7 @@ DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID", "")
 
 # Supabase (indicadores agregados)
 SUPABASE_ENABLED = _bool("SUPABASE_ENABLED", "1")
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/").removesuffix("/rest/v1") if hasattr(str, "removesuffix") else os.environ.get("SUPABASE_URL", "").rstrip("/").replace("/rest/v1", "")
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 AGG_MINUTES = int(os.environ.get("AGG_MINUTES", "60"))
 

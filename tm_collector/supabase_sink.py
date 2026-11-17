@@ -62,10 +62,11 @@ def _post(table, payload, on_conflict=None):
         url += f"?on_conflict={on_conflict}"
     headers = {
         "apikey": config.SUPABASE_SERVICE_KEY,
-        "Authorization": f"Bearer {config.SUPABASE_SERVICE_KEY}",
         "Content-Type": "application/json",
         "Prefer": "resolution=merge-duplicates,return=minimal",
     }
+    if config.SUPABASE_SERVICE_KEY.startswith("eyJ"):  # clave legacy service_role (JWT)
+        headers["Authorization"] = f"Bearer {config.SUPABASE_SERVICE_KEY}"
     r = requests.post(url, json=payload, headers=headers, timeout=60)
     r.raise_for_status()
 

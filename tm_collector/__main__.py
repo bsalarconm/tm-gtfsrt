@@ -3,6 +3,7 @@ Recolector GTFS-RT de TransMilenio: posiciones, viajes y alertas.
 
   python -m tm_collector          modo continuo (Render worker)
   python -m tm_collector --once   prueba: lee los 3 feeds y muestra un resumen (no guarda nada)
+  python -m tm_collector --test   prueba completa: recolecta 2 minutos, guarda, sube a Drive y Supabase, y termina
 """
 import logging
 import signal
@@ -145,10 +146,14 @@ def main():
     rows_by_file = {}
     current_hour = None
     last_ping = 0.0
+    test_end = time.time() + 120 if "--test" in sys.argv else None
     log.info("Recolector iniciado: %s", ", ".join(f"{s.prefix} cada {s.every}s" for s in streams))
 
     while running:
         t0 = time.time()
+        if test_end and t0 >= test_end:
+            log.info("Fin de la prueba de 2 minutos")
+            break
         now = datetime.now(config.TZ)
         hour_key = (now.strftime("%Y-%m-%d"), now.strftime("%H"))
         if current_hour and hour_key != current_hour:
