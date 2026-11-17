@@ -1,0 +1,44 @@
+services:
+  - type: worker
+    name: tm-gtfsrt-collector
+    runtime: python
+    plan: starter
+    region: virginia
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m tm_collector
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: FEED_URL
+        value: https://gtfs.transmilenio.gov.co/positions.pb
+      - key: TRIPUPDATES_URL
+        value: https://gtfs.transmilenio.gov.co/tripupdates.pb
+      - key: ALERTS_URL
+        value: https://gtfs.transmilenio.gov.co/alerts.pb
+      - key: POLL_SECONDS
+        value: "20"
+      - key: TRIPUPDATES_POLL_SECONDS
+        value: "300"
+      - key: ALERTS_POLL_SECONDS
+        value: "60"
+      - key: AGG_MINUTES
+        value: "60"
+      - key: DRIVE_ENABLED
+        value: "1"
+      - key: SUPABASE_ENABLED
+        value: "1"
+      # Secretos: se piden en el panel de Render al crear el servicio (no se guardan en Git)
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REFRESH_TOKEN
+        sync: false
+      - key: DRIVE_FOLDER_ID
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: HEALTHCHECK_URL
+        sync: false

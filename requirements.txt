@@ -1,0 +1,7 @@
+requests>=2.31
+pyarrow>=15
+gtfs-realtime-bindings>=1.0
+google-api-python-client>=2.100
+google-auth>=2.25
+backports.zoneinfo; python_version < "3.9"
+tzdata
