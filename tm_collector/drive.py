@@ -35,3 +35,12 @@ def upload(path: Path, name: str) -> str:
     f = _svc().files().create(body=meta, media_body=media, fields="id,size").execute()
     log.info("subido a Drive: %s (%s bytes)", name, f.get("size"))
     return f["id"]
+
+
+def delete_by_name(name: str) -> int:
+    """Borra de la carpeta los archivos con ese nombre (solo los que creó esta app). Devuelve cuántos borró."""
+    q = f"name = '{name}' and '{config.DRIVE_FOLDER_ID}' in parents and trashed = false"
+    files = _svc().files().list(q=q, fields="files(id)", spaces="drive").execute().get("files", [])
+    for f in files:
+        _svc().files().delete(fileId=f["id"]).execute()
+    return len(files)

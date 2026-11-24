@@ -56,9 +56,17 @@ if config.API_HEADER:
 
 
 def fetch(url: str) -> bytes:
-    r = _session.get(url, headers=_headers, timeout=30)
-    r.raise_for_status()
-    return r.content
+    """Descarga con 2 reintentos rápidos (fallas de red pasajeras)."""
+    import time
+    for intento in range(3):
+        try:
+            r = _session.get(url, headers=_headers, timeout=15)
+            r.raise_for_status()
+            return r.content
+        except Exception:
+            if intento == 2:
+                raise
+            time.sleep(2)
 
 
 def _feed(raw: bytes):
